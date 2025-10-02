@@ -23,11 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(passport.initialize());
-kPassport(passport);
-
-app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
-});
+// kPassport(passport);
 
 app.use("/example", exampleRoute);
 app.use("/user", userRoute);
