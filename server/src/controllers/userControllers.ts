@@ -3,8 +3,7 @@ import createHttpError, { InternalServerError } from "http-errors";
 import User from "../model/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { FRONTEND_URL, JWT_KEY, resend } from "../config"; // ✅ use resend
-// ⛔ removed nodemailer + transporter imports
+import { FRONTEND_URL, JWT_KEY, resend } from "../config";
 
 export const signupUser: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -81,7 +80,7 @@ export const sendVerificationMail: RequestHandler = async (req, res, next) => {
 
     await resend.emails.send({
       from: "hello.chouglesami@gmail.com",
-      to: email,
+      to: [`${email}`],
       subject: "For Email Verification",
       html: `Your Verification Link <a href="${FRONTEND_URL}/email-verify/${jwtToken}">Click Here</a>`,
     });
