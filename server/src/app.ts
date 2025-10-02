@@ -23,9 +23,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(passport.initialize());
-// kPassport(passport);
+kPassport(passport);
 
-app.use("/example", exampleRoute);
+app.use("/", exampleRoute);
 app.use("/user", userRoute);
 
 // app.use(() => {
