@@ -3,8 +3,9 @@ import createHttpError, { InternalServerError } from "http-errors";
 import User from "../model/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { FRONTEND_URL, JWT_KEY, transporter } from "../config";
-import nodemailer from "nodemailer";
+import { FRONTEND_URL, JWT_KEY, resend } from "../config"; // ✅ use resend
+// ⛔ removed nodemailer + transporter imports
+
 export const signupUser: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -78,47 +79,18 @@ export const sendVerificationMail: RequestHandler = async (req, res, next) => {
       expiresIn: "60m",
     });
 
-    let info = await transporter.sendMail({
-      from: '"Fred Foo 👻" <anshuraj@dosomecoding.com>', // sender address
-      to: `${email}`, // list of receivers
-      subject: "For Email Verification", // Subject line
-      // text: "Hello world?", // plain text body
-      html: `Your Verification Link <a href="${FRONTEND_URL}/email-verify/${jwtToken}">Link</a>`, // html body
+    await resend.emails.send({
+      from: "hello.chouglesami@gmail.com",
+      to: email,
+      subject: "For Email Verification",
+      html: `Your Verification Link <a href="${FRONTEND_URL}/email-verify/${jwtToken}">Click Here</a>`,
     });
-
-    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
     await user.updateOne({ $set: { verifyToken: encryptedToken } });
-    res.json({
-      message: `Preview URL: %s ${nodemailer.getTestMessageUrl(info)}`,
-    });
+    res.json({ message: "Verification email sent" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return next(InternalServerError);
-  }
-};
-
-export const verifyUserMail: RequestHandler = async (req, res, next) => {
-  console.log(req);
-  const { token }: { token: string } = req.body;
-  console.log(token);
-
-  try {
-    const decodedToken: any = jwt.verify(token, JWT_KEY);
-
-    const user = await User.findById(decodedToken.userId);
-    if (!user) return next(createHttpError(401, "Token Invalid"));
-
-    console.log(user);
-
-    await user.updateOne({
-      $set: { isUserVerified: true },
-      $unset: { verifyToken: 0 },
-    });
-
-    res.json({ message: "Email Verified!" });
-  } catch (error) {
-    return next(createHttpError(401, "Token Invalid"));
   }
 };
 
@@ -138,25 +110,42 @@ export const sendForgotPasswordMail: RequestHandler = async (
       expiresIn: "60m",
     });
 
-    let info = await transporter.sendMail({
-      from: '"Fred Foo 👻" <anshuraj@dosomecoding.com>', // sender address
-      to: `${email}`, // list of receivers
-      subject: "For Forgot Password Verification Mail", // Subject line
-      // text: "Hello world?", // plain text body
-      html: `Your Verification for forgot password Link <a href="${FRONTEND_URL}/forgot-password-verify/${jwtToken}">Link</a>`, // html body
+    await resend.emails.send({
+      from: "hello.chouglesami@gmail.com",
+      to: email,
+      subject: "Forgot Password Verification",
+      html: `Reset your password <a href="${FRONTEND_URL}/forgot-password-verify/${jwtToken}">Click Here</a>`,
     });
-
-    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
     await user.updateOne({ $set: { verifyToken: encryptedToken } });
 
-    res.json({
-      message: `Preview URL: %s ${nodemailer.getTestMessageUrl(info)}`,
-    });
+    res.json({ message: "Forgot password email sent" });
   } catch (error) {
+    console.error(error);
     return next(InternalServerError);
   }
 };
+
+export const verifyUserMail: RequestHandler = async (req, res, next) => {
+  const { token }: { token: string } = req.body;
+
+  try {
+    const decodedToken: any = jwt.verify(token, JWT_KEY);
+
+    const user = await User.findById(decodedToken.userId);
+    if (!user) return next(createHttpError(401, "Token Invalid"));
+
+    await user.updateOne({
+      $set: { isUserVerified: true },
+      $unset: { verifyToken: 0 },
+    });
+
+    res.json({ message: "Email Verified!" });
+  } catch (error) {
+    return next(createHttpError(401, "Token Invalid"));
+  }
+};
+
 export const verifyForgotMail: RequestHandler = async (req, res, next) => {
   const { token, password }: { token: string; password: string } = req.body;
 
