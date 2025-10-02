@@ -1,4 +1,4 @@
-# React Authentication App
+# Dashboard Authentication App
 
 A full-stack authentication system built with React, Node.js, and MongoDB.  
 Includes secure user signup, login, email verification, JWT authentication, and password reset functionality.
@@ -31,7 +31,7 @@ Through this project, I gained hands-on experience with:
 - Sending transactional emails with Nodemailer (verification & password reset)  
 - Using MongoDB Atlas for cloud database management  
 - Environment variables (.env) for private keys & secrets  
-- Hosting frontend (Vercel) and backend Railway for free deployment  
+- Hosting frontend "Vercel" and backend "Railway" for free deployment  
 
 ---
 
