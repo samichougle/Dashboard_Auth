@@ -79,8 +79,8 @@ export const sendVerificationMail: RequestHandler = async (req, res, next) => {
     });
 
     await resend.emails.send({
-      from: "hello.chouglesami@gmail.com",
-      to: [`${email}`],
+      from: "Acme <onboarding@resend.dev>",
+      to: email,
       subject: "For Email Verification",
       html: `Your Verification Link <a href="${FRONTEND_URL}/email-verify/${jwtToken}">Click Here</a>`,
     });
