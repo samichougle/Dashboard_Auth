@@ -9,6 +9,7 @@ import passport from "passport";
 import kPassport from "./middleware/passport";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import verifyRoute from "./routes/verifyRoutes";
 const app = express();
 app.use(
   cors({
@@ -45,3 +46,5 @@ mongoose
   .catch(() => {
     throw createHttpError(501, "Unable to connect database");
   });
+
+app.use("/user", verifyRoute);
