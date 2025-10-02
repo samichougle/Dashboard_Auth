@@ -2,7 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
 import User from "../model/User";
-import { JWT_KEY } from "../config";
+import { JWT_KEY, FRONTEND_URL } from "../config";
 
 const router = express.Router();
 
@@ -20,7 +20,8 @@ router.get("/verify/:token", async (req, res, next) => {
       $unset: { verifyToken: 0 },
     });
 
-    return res.send("✅ Email verified! You can now login.");
+    // ✅ Redirect to frontend page with token
+    return res.redirect(`${FRONTEND_URL}/email-verify/${token}`);
   } catch (error) {
     return next(createHttpError(400, "Invalid or expired token"));
   }
