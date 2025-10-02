@@ -11,7 +11,13 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 const app = express();
 app.use(
-  cors({ origin: [process.env.FRONTEND_URL as string], credentials: true })
+  cors({
+    origin: [
+      "http://localhost:5173", // local frontend
+      "https://dashboard-auth-drab.vercel.app", // your Vercel domain
+    ],
+    credentials: true,
+  })
 );
 app.use(express.json());
 app.use(cookieParser());
