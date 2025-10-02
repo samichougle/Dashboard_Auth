@@ -21,7 +21,7 @@ router.get("/verify/:token", async (req, res, next) => {
     });
 
     // ✅ Redirect to frontend page with token
-    return res.redirect(`${FRONTEND_URL}/email-verify/${token}`);
+    res.redirect(`${FRONTEND_URL}/email-verify/${token}`);
   } catch (error) {
     return next(createHttpError(400, "Invalid or expired token"));
   }
