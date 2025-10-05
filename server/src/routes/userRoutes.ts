@@ -22,14 +22,18 @@ router.post("/signup", signupUserValidation, signupUser);
 router.post("/signin", signinUserValidation, signinUser);
 
 router.post(
-  "/register-email-verification",
+  "/send-verification-mail",
   sendVerificationMailValidation,
   sendVerificationMail
 );
 
-router.post("/forgot-password", verifyUserMail);
+router.post("/verify-user-mail", verifyUserMail);
 
-router.post("/forgot-password", verifyForgotMailValidation, verifyForgotMail);
+router.post(
+  "/verify-forgot-mail",
+  verifyForgotMailValidation,
+  verifyForgotMail
+);
 router.post(
   "/forgot-password",
   sendForgotPasswordMailValidation,
