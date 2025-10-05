@@ -6,7 +6,7 @@ import { JWT_KEY, FRONTEND_URL } from "../config";
 
 const router = express.Router();
 
-router.get("/verify/:token", async (req, res, next) => {
+router.get("/email-verify/:token", async (req, res, next) => {
   const { token } = req.params;
 
   try {
