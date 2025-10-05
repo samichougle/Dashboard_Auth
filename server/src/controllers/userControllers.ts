@@ -82,7 +82,7 @@ export const sendVerificationMail: RequestHandler = async (req, res, next) => {
       from: "Acme <onboarding@resend.dev>",
       to: email,
       subject: "For Email Verification",
-      html: `Your Verification Link <a href="https://dashboardauth-production.up.railway.app/user/verify/${jwtToken}">Click Here</a>`,
+      html: `Your Verification Link <a href="https://dashboardauth-production.up.railway.app/user/email-verify/${jwtToken}">Click Here</a>`,
     });
 
     await user.updateOne({ $set: { verifyToken: encryptedToken } });
